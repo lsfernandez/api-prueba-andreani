@@ -1,0 +1,122 @@
+basePath: /api/v1
+definitions:
+  controllers.PedidoInput:
+    properties:
+      color:
+        type: string
+      nombreCompleto:
+        type: string
+    type: object
+  models.ResponsePedido:
+    properties:
+      color:
+        type: string
+      colorIngles:
+        type: string
+      fechaPedido:
+        type: string
+      idPedido:
+        type: string
+      nombreCompleto:
+        type: string
+    type: object
+host: localhost:8080
+info:
+  contact:
+    email: apis@andreani.com
+    name: Equipo de integraciones
+    url: https://developers.andreani.com
+  description: API Restful en Golang para obtener la cotizacion para un envío
+  title: Api Prueba
+  version: "1.0"
+paths:
+  /pedidos:
+    post:
+      consumes:
+      - application/json
+      description: Recibe un json con nombre completo y un color. Valida que el nombre
+        sea valido y consulta si el color esta en la base de datos y si lo está, trae
+        su traduccion. Genera un pedido y lo guarda en una base de datos Mongo.
+      parameters:
+      - description: Nombre Completo y Color para dar de alta un pedido
+        in: body
+        name: Request
+        required: true
+        schema:
+          $ref: '#/definitions/controllers.PedidoInput'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/models.ResponsePedido'
+        "400":
+          description: Bad Request
+          schema:
+            type: string
+        "500":
+          description: Internal Server Error
+          schema:
+            type: string
+      summary: Recibe un nombre completo y un color. Genera un pedido
+  /pedidos/{id}:
+    get:
+      description: Recibe el id por parametro, lo consulta en la base de datos y si
+        se encontró muestra todos los datos del pedido. Si no se encontró arroja un
+        error
+      parameters:
+      - description: Id de Pedido
+        in: path
+        name: id
+        required: true
+        type: string
+      produces:
+      - application/json
+      responses:
+        "202":
+          description: Accepted
+          schema:
+            $ref: '#/definitions/models.ResponsePedido'
+        "400":
+          description: Bad Request
+          schema:
+            type: string
+      summary: Recibe un id de pedido y responde con los datos del mismo
+    patch:
+      consumes:
+      - application/json
+      description: Recibe un id por parametro y un json con nombre completo y/o un
+        color. Valida que el nombre sea valido y consulta si el color esta en la base
+        de datos, si lo está, trae su traduccion. Actualiza el pedido y lo guarda
+        en una base de datos Mongo.
+      parameters:
+      - description: Id de Pedido
+        in: path
+        name: id
+        required: true
+        type: string
+      - description: Nombre Completo y/o Color para modificar un pedido
+        in: body
+        name: Request
+        required: true
+        schema:
+          $ref: '#/definitions/controllers.PedidoInput'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/models.ResponsePedido'
+        "400":
+          description: Bad Request
+          schema:
+            type: string
+        "500":
+          description: Internal Server Error
+          schema:
+            type: string
+      summary: Recibe un id de pedido, nombre completo y/o un color. Modifica los
+        datos del pedido
+swagger: "2.0"
